@@ -1,0 +1,36 @@
+---
+- name: Install
+  apt: name=nginx state=latest
+
+- name: Start NGINX
+  service: name=nginx state=started enabled=true
+
+- name: Supprimer default.conf
+  become: yes
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  notify: nginx reload
+
+- name: Ajout de depot Php dotweb
+  include: php5.yml
+
+- name: configuration des sites
+  include : sites.yml
+  with_items: "{{ domains }}"
+#    - flaccoElite
+#    - joeFlacco
+
+#- name: Creer un dossier dans le home de user
+#  become: yes
+#  file: path=/home/{{ user  }}/{{ domain }} state=directory owner={{ user }}
+
+#- name: Lien symbolique vers www
+#  become: yes
+#  file: src=/home/{{ user }}/{{ domain }} dest=/var/www/{{ domain }} state=link
+
+#- name: creation du site flaccoElite
+#  template: src=templates/nginx.j2 dest=/etc/nginx/sites-available/{{ domain }}
+
+#- name: activation du site via lien symbolique
+#  file: src=/etc/nginx/sites-available/{{ domain }} dest=/etc/nginx/sites-enabled/{{ domain }} state=link
+#  notify: nginx reload
+...

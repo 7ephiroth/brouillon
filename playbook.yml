@@ -1,0 +1,11 @@
+---
+- name: Playbook installation Git Htop Zsh Nginx
+  hosts: centos
+  remote_user: root
+  vars:
+    user : toto
+  roles:
+    - user
+    - tools
+    - nginxstart
+...

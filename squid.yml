@@ -1,0 +1,8 @@
+---
+- name: Playbook installation Squid sur Debian 8
+  hosts: squid
+  remote_user: root
+
+  roles:
+    - squid
+...

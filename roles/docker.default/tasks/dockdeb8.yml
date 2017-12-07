@@ -1,0 +1,36 @@
+---
+- name: apt update_cache 1ere fois
+  apt:
+    update_cache: yes
+
+- name: installation des Tools apt-transport-https ca-certificates curl gnupg2 software-properties-common lsb-release
+  apt: name={{ item }} update_cache=yes state=latest
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg2
+    - software-properties-common
+    - lsb-release
+    - python-docker
+    - python-pip
+
+- name: execution de la commande curl
+  shell: curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | apt-key add -
+
+- name: ajout depot pour docker
+  shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") $(lsb_release -cs) stable"
+
+- name: apt update_cache 2eme fois
+  apt:
+    update_cache: yes
+
+- name: installation docker-ce
+  apt:
+    name: docker-ce
+    state: latest
+    update_cache: yes
+
+#- name: installation de la librairie docker-py
+#  shell: pip install docker-py==1.10.6
+...

@@ -1,0 +1,15 @@
+---
+- name: Playbook installation Nginx sur Debian 8
+  hosts: debian8
+  remote_user: root
+  vars:
+    user : toto
+    domains:
+      - flaccoelite.fr
+      - enzoelite.fr
+  roles:
+    - toolsdeb8
+    - userdeb8
+    - debian8nginx
+#    - php7
+...

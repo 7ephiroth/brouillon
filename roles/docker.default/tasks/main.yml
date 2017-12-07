@@ -1,0 +1,34 @@
+---
+  - name: ajout des depots et install docker-ce pour debian 8
+    include: dockdeb8.yml
+
+  - name: creation docker friendly_ptolemy
+    docker_container:
+      name: friendly_ptolemy
+      image: httpd
+      state: started
+      ports:
+        - "82:80"
+        - "0.0.0.0:82:80/tcp"
+
+  - name: creation docker practical_cori
+    docker_container:
+      name: practical_cori
+      image: httpd
+      state: started
+      ports:
+        - "84:80"
+        - "0.0.0.0:84:80/tcp"
+
+  - name: Container present
+    docker_container:
+      name: mycontainer
+      image: httpd
+      state: started
+      ports:
+        - "86:80"
+        - "0.0.0.0:86:80/tcp"
+
+#  - name: execution de httpd docker
+#    shell: docker run -td -p82:80 httpd
+...

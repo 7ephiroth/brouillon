@@ -1,0 +1,31 @@
+---
+- name: Creer un dossier dans le home de user
+  become: yes
+  file: path=/home/{{ user  }}/{{ item }} state=directory owner={{ user }}
+
+- name: Lien symbolique vers www
+  become: yes
+  file: src=/home/{{ user }}/{{ item }} dest=/var/www/{{ item }} state=link
+
+- name: creation du site flaccoElite
+  template: src=templates/nginx.j2 dest=/etc/nginx/sites-available/{{ item }}
+
+- name: activation du site via lien symbolique
+  file: src=/etc/nginx/sites-available/{{ item }} dest=/etc/nginx/sites-enabled/{{ item }} state=link
+  notify: nginx reload
+
+- name: Creer un dossier dans le home de isjoe
+  become: yes
+  file: path=/home/isjoe/eliteFlacco state=directory owner=isjoe
+
+- name: Lien symbolique vers www
+  become: yes
+  file: src=/home/isjoe/eliteFlacco dest=/var/www/eliteFlacco state=link
+
+- name: creation du site eliteFlacco
+  template: src=templates/nginxisjoe.j2 dest=/etc/nginx/sites-available/eliteFlacco
+
+- name: activation du site via lien symbolique
+  file: src=/etc/nginx/sites-available/eliteFlacco dest=/etc/nginx/sites-enabled/eliteFlacco state=link
+  notify: nginx reload
+...

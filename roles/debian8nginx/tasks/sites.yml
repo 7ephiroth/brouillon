@@ -1,0 +1,34 @@
+---
+- name: creation du dossier
+  become: yes
+  when: item.repo is undefined
+  file: path=/home/{{ user }}/{{ item.domain }} state=directory owner={{ user }}
+
+- name: clonage du site {{ item.domain }} avec {{ item.repo }}
+  become: yes
+  when: item.repo is defined
+  git: dest=/home/{{ user }}/{{ item.domain }} clone=yes  repo={{ item.repo }} update=yes force=yes
+  sudo_user : www-data
+
+- name : lien vers www
+  become: yes
+  file: src=/home/{{ user }}/{{ item.domain }} dest=/var/www/{{ item.domain }} state=link
+
+- name: creation configuration nginx
+  template: src=templates/nginx.j2 dest=/etc/nginx/sites-available/{{ item.domain }}
+
+- name: copy du fichier index.php dans le repertoire du user
+  copy: src=templates/index.php dest=/home/{{ user }}/{{ item.domain }}/index.php owner={{ user }} group={{ user }} mode=755
+
+- name: copy du fichier index.html dans le repertoire du user
+  when: item.repo is undefined
+  copy: src=templates/index.html dest=/home/{{ user }}/{{ item.domain }}/index.html owner={{ user }} group={{ user }}  mode=755
+
+- name: copy du fichier akuma.jpg dans le repertoire du user
+  when: item.repo is undefined
+  copy: src=templates/akuma.jpg dest=/home/{{ user }}/{{ item.domain }}/akuma.jpg owner={{ user }} group={{ user }}  mode=755
+
+- name: activation site
+  file: src=/etc/nginx/sites-available/{{ item.domain }} dest=/etc/nginx/sites-enabled/{{ item.domain }} state=link
+  notify: nginx restart
+...

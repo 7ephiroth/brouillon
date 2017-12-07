@@ -1,1 +1,1 @@
-# docker-wp-ansible
+# brouillon: tout mon repertoire /etc/ansible

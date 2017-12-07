@@ -1,0 +1,8 @@
+---
+- name: Test de creation de container docker sur une Debian 8
+  hosts: squid
+  remote_user: root
+
+  roles:
+    - docker
+...

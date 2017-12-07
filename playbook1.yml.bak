@@ -1,0 +1,10 @@
+---
+- name: Playbook installation Nginx sur Debian
+  hosts: debian
+  remote_user: root
+  vars:
+    user : toto
+    domain : flaccoElite
+  roles:
+    - debiannginx
+...

@@ -1,0 +1,25 @@
+---
+- name: creation du dossier
+  become: yes
+  file: path=/home/{{ user }}/{{ item }} state=directory owner={{ user }}
+
+- name : lien vers www
+  become: yes
+  file: src=/home/{{ user }}/{{ item }} dest=/var/www/{{ item }} state=link
+
+- name: creation configuration nginx
+  template: src=templates/nginx.j2 dest=/etc/nginx/sites-available/{{ item }}
+
+- name: copy du fichier index.php dans le repertoire du user
+  copy: src=templates/index.php dest=/home/{{ user }}/{{ item }}/index.php owner={{ user }} group={{ user }} mode=755
+
+- name: copy du fichier index.htm dans le repertoire du user
+  copy: src=templates/index.htm dest=/home/{{ user }}/{{ item }}/index.htm owner={{ user }} group={{ user }}  mode=755
+
+- name: copy du fichier akuma.jpg dans le repertoire du user
+  copy: src=templates/akuma.jpg dest=/home/{{ user }}/{{ item }}/akuma.jpg owner={{ user }} group={{ user }}  mode=755
+
+- name: activation site
+  file: src=/etc/nginx/sites-available/{{ item }} dest=/etc/nginx/sites-enabled/{{ item }} state=link
+  notify: nginx reloaded
+...

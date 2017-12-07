@@ -1,0 +1,9 @@
+---
+- name: installation des Tools Git Htop Zsh Nginx
+  yum: name={{ item }} update_cache=yes state=latest
+  with_items:
+    - htop
+    - git
+    - zsh
+    - nginx
+...

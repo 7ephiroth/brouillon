@@ -1,0 +1,27 @@
+---
+- name: installation git et htop
+  hosts: servers
+  remote_user: root
+  vars:
+    user : toto
+
+  tasks:
+    - name: installation de Git Htop et Zsh
+      yum: name={{ item }} update_cache=yes state=latest
+      with_items:
+        - htop
+        - git
+        - zsh
+        - nginx
+    - name: Start
+      service: name=nginx state=started enabled=true
+    - name: Supprimer default.conf  de NGINX
+      file: path=/etc/nginx/sites-enabled/default state=absent
+      notify: nginx reload
+    - name: creation user
+      user: name={{ user }} comment="master" shell=/bin/bash
+    - name: utilisation de clef
+      authorized_key: user={{ user }} key={{ lookup('file', '/home/{{ user }}/.ssh/id_rsa.pub') }}
+    - name: utilisation de template pour sudoers tron
+      template: src=templates/sudoers.j2 dest=/etc/sudoers.d/{{ user }} validate='/usr/sbin/visudo -cf %s'
+...

@@ -1,0 +1,13 @@
+---
+- name: installation des Tools Git Htop screen vim
+  apt: name={{ item }} update_cache=yes state=latest
+  with_items:
+    - htop
+    - git
+    - screen
+    - vim
+    - curl
+    - gnupg2
+    - software-properties-common
+    - lsb-release
+...

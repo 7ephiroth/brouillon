@@ -1,0 +1,10 @@
+server {
+  listen 8080;
+	server_name eliteFlacco;
+	root /var/www/eliteFlacco;
+	index phpinfo.php index.htm;
+  location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+    }
+}

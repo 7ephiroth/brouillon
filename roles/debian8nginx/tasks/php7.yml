@@ -1,0 +1,48 @@
+---
+- name: ajout depot php dotdeb
+  apt_repository: repo="{{ item }}"
+  with_items:
+    - deb http://packages.dotdeb.org jessie all
+    - deb-src http://packages.dotdeb.org jessie all
+
+- name: ajout clef
+  apt_key: url=https://www.dotdeb.org/dotdeb.gpg
+
+- name: apt update_cache
+  apt: update_cache=yes
+
+- name: installation php
+  apt: name={{ item }} state=latest
+  with_items: "{{ php_packages }}"
+
+- name : Modifier expression post_max_size dans le fichier /etc/php/7.0/fpm/php.ini
+  lineinfile:
+    path: /etc/php/7.0/fpm/php.ini
+    regexp: '^post_max_size[\s]?='
+    line: 'post_max_size = {{ php_post_max_size }}'
+
+- name : Modifier expression upload_max_filesize dans le fichier /etc/php/7.0/fpm/php.ini
+  lineinfile:
+    path: /etc/php/7.0/fpm/php.ini
+    regexp: '^upload_max_filesize[\s]?='
+    line: 'upload_max_filesize = {{ php_upload_max_filesize }}'
+
+- name : Modifier expression memory_limit dans le fichier /etc/php/7.0/fpm/php.ini
+  lineinfile:
+    path: /etc/php/7.0/fpm/php.ini
+    regexp: '^memory_limit[\s]?='
+    line: 'memory_limit = {{ php_memory_limit }}'
+
+- name : Modifier expression date.timezone dans le fichier /etc/php/7.0/fpm/php.ini
+  lineinfile:
+    path: /etc/php/7.0/fpm/php.ini
+    regexp: '^;date.timezone[\s]?='
+    line: 'date.timezone = {{ php_timezone }}'
+
+- name : Modifier expression listen = /run/php/php7.0-fpm.sock dans le fichier /etc/php7/fpm/pool.d/www.conf
+  lineinfile:
+    path: /etc/php/7.0/fpm/pool.d/www.conf
+    regexp: '^listen[\s]?='
+    line: 'listen = 127.0.0.1:9000'
+  notify:  php7.0-fpm restart
+...

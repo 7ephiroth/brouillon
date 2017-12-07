@@ -1,0 +1,19 @@
+---
+- name: Squid install
+  apt:
+    name: squid3
+    state: latest
+    update_cache: yes
+
+- name: Service start
+  service:
+    name: squid3
+    state: started
+
+- name: Service enable
+  service:
+    name: squid3
+    enabled: yes
+
+- name: configuration des sites
+  include: sites.yml

@@ -1,0 +1,28 @@
+---
+#- name: Ajout du depot php dotweb pour php5.6 sur Wheezy
+#  apt_repository:
+#    repo: deb http://packages.dotdeb.org wheezy all
+#    state: present
+#    update_cache: no
+
+#- name: Ajout du depot php dotweb source pour php5.6 sur Wheezy
+#  apt_repository:
+#    repo: deb-src http://packages.dotdeb.org wheezy all
+#    state: present
+#    update_cache: no
+
+- name: Ajout du depot php dotweb source pour php5.6 sur Wheezy
+  apt_repository: repo="{{ item }}"
+  with_items:
+    - deb http://packages.dotdeb.org wheezy all
+    - deb-src http://packages.dotdeb.org wheezy all
+
+- name: Ajout des clefs GnuPG Key
+  apt_key:
+    url: https://www.dotdeb.org/dotdeb.gpg
+    state: present
+
+- name: Run the equivalent of "apt-get update" as a separate step
+  apt:
+    update_cache: yes
+...
